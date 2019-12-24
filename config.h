@@ -30,6 +30,8 @@ static const Rule rules[] = {
 	{ "Gimp",     NULL,       NULL,       0,            1,           -1 },
 	{ "Firefox",  NULL,       NULL,       1 << 8,       0,           -1 },
 	{ "Nautilus", NULL,       NULL,       0,            1,           -1 },
+	{ NULL,       NULL,      "brightness", 0,           1,           -1 },
+	{ NULL,       NULL,      "float-term", 0,           1,           -1 }, 
 };
 
 /* layout(s) */
@@ -60,6 +62,7 @@ static const Layout layouts[] = {
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *termcmd[]  = { "st", NULL };
+static const char *floattermcmd[] = { "st", "-t", "float-term", NULL };
 static const char *browsercmd[] = { "firefox", NULL };
 static const char *upvol[]   = { "amixer", "set", "Master", "5%+",     NULL };
 static const char *downvol[] = { "amixer", "set", "Master", "5%-",     NULL };
@@ -70,6 +73,7 @@ static Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
 	{ SUPER,                        XK_Return, spawn,          {.v = termcmd } },
+	{ MODKEY,                       XK_grave,  spawn,          {.v = floattermcmd } },
 	{ SUPER,                        XK_w,      spawn,          {.v = browsercmd } },
 	{ SUPER,                        XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
