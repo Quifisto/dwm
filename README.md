@@ -1,14 +1,12 @@
-## dwm - dynamic window manager (quifisto's version)
+# dwm - dynamic window manager (quifisto's version)
 dwm is an extremely fast, small, and dynamic window manager for X.
 I added some personal modifications and some patches from suckless' website.
 Some of those can be found in the patches folder.
 
 
-## Requirements
+## Installation
 In order to build dwm you need the Xlib header files.
 
-
-## Installation
 Edit config.mk to match your local setup (dwm is installed into
 the /usr/local namespace by default).
 
@@ -24,8 +22,7 @@ Add the following line to your .xinitrc to start dwm using startx:
     exec dwm
 
 
-Configuration
--------------
+## Configuration
 The configuration of dwm is done by creating a custom config.h
 and (re)compiling the source code.
 
