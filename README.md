@@ -1,6 +1,6 @@
 # dwm - dynamic window manager (quifisto's version)
 dwm is an extremely fast, small, and dynamic window manager for X.
-I added some personal modifications and some patches from suckless' website.
+I added some personal modifications and some patches from suckless' [website](https://dwm.suckless.org).
 Some of those can be found in the patches folder.
 
 
