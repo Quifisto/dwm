@@ -23,8 +23,10 @@ Add the following line to your .xinitrc to start dwm using startx:
 
 
 ## Configuration
-The configuration of dwm is done by creating a custom config.h
-and (re)compiling the source code.
+The simple configuration (shortcuts, fonts, colors) of dwm is done by creating a custom config.h and (re)compiling the source code.
+If you want to make more drastic changes you'll have to edit the actual functions in the code.
+But don't be frightened, if you know a bit of c it's quite easy to read and make changes.
+You should start by looking at dwm.c, which contains the majority of the code.
+All drawing functions are writen in drw.c, so that might also be worth a look.
 
-You then need to rerun dwm by restarting (alt+shift+r) or quitting (alt+ctrl+shitft+q)
-for the changes to take effect.
+For the changes to take effect you need to rerun dwm by restarting (alt+shift+r) or quitting (alt+ctrl+shitft+q).
