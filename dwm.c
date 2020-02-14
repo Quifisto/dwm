@@ -211,6 +211,8 @@ static void sigterm(int unused);
 static void spawn(const Arg *arg);
 static void tag(const Arg *arg);
 static void tagmon(const Arg *arg);
+static void tagtoleft(const Arg *arg);
+static void tagtoright(const Arg *arg);
 static void tile(Monitor *);
 static void togglebar(const Arg *arg);
 static void togglefloating(const Arg *arg);
@@ -230,6 +232,8 @@ static void updatetitle(Client *c);
 static void updatewindowtype(Client *c);
 static void updatewmhints(Client *c);
 static void view(const Arg *arg);
+static void viewtoleft(const Arg *arg);
+static void viewtoright(const Arg *arg);
 static Client *wintoclient(Window w);
 static Monitor *wintomon(Window w);
 static int xerror(Display *dpy, XErrorEvent *ee);
@@ -1299,6 +1303,13 @@ resizeclient(Client *c, int x, int y, int w, int h)
 	c->oldw = c->w; c->w = wc.width = w;
 	c->oldh = c->h; c->h = wc.height = h;
 	wc.border_width = c->bw;
+        if (((nexttiled(c->mon->clients) == c && !nexttiled(c->next))
+               || &monocle == c->mon->lt[c->mon->sellt]->arrange)
+               && !c->isfullscreen && !c->isfloating) {
+               c->w = wc.width += c->bw * 2;
+               c->h = wc.height += c->bw * 2;
+               wc.border_width = 0;
+        }
 	XConfigureWindow(dpy, c->win, CWX|CWY|CWWidth|CWHeight|CWBorderWidth, &wc);
 	configure(c);
 	XSync(dpy, False);
@@ -1705,6 +1716,28 @@ tagmon(const Arg *arg)
 }
 
 void
+tagtoleft(const Arg *arg) {
+    if(selmon->sel != NULL
+    && __builtin_popcount(selmon->tagset[selmon->seltags] & TAGMASK) == 1
+    && selmon->tagset[selmon->seltags] > 1) {
+        selmon->sel->tags >>= 1;
+        focus(NULL);
+        arrange(selmon);
+    }
+}
+
+void
+tagtoright(const Arg *arg) {
+    if(selmon->sel != NULL
+    && __builtin_popcount(selmon->tagset[selmon->seltags] & TAGMASK) == 1
+    && selmon->tagset[selmon->seltags] & (TAGMASK >> 1)) {
+        selmon->sel->tags <<= 1;
+        focus(NULL);
+        arrange(selmon);
+    }
+}
+
+void
 tile(Monitor *m)
 {
 	unsigned int i, n, h, mw, my, ty;
@@ -2078,6 +2111,28 @@ view(const Arg *arg)
 		selmon->tagset[selmon->seltags] = arg->ui & TAGMASK;
 	focus(NULL);
 	arrange(selmon);
+}
+
+void
+viewtoleft(const Arg *arg) {
+    if(__builtin_popcount(selmon->tagset[selmon->seltags] & TAGMASK) == 1
+    && selmon->tagset[selmon->seltags] > 1) {
+        selmon->seltags ^= 1; /* toggle sel tagset */
+        selmon->tagset[selmon->seltags] = selmon->tagset[selmon->seltags ^ 1] >> 1;
+        focus(NULL);
+        arrange(selmon);
+    }
+}
+
+void
+viewtoright(const Arg *arg) {
+    if(__builtin_popcount(selmon->tagset[selmon->seltags] & TAGMASK) == 1
+    && selmon->tagset[selmon->seltags] & (TAGMASK >> 1)) {
+        selmon->seltags ^= 1; /* toggle sel tagset */
+        selmon->tagset[selmon->seltags] = selmon->tagset[selmon->seltags ^ 1] << 1;
+        focus(NULL);
+        arrange(selmon);
+    }
 }
 
 Client *

@@ -28,12 +28,14 @@ static const Rule rules[] = {
 	 *	WM_CLASS(STRING) = instance, class
 	 *	WM_NAME(STRING) = title
 	 */
-	/* class      instance    title       tags mask     isfloating   monitor */
-	{ "Gimp",     NULL,       NULL,       0,            1,           -1 },
-	{ "Firefox",  NULL,       NULL,       1 << 8,       0,           -1 },
-	{ "Nautilus", NULL,       NULL,       0,            1,           -1 },
-	{ NULL,       NULL,      "brightness", 0,           1,           -1 },
-	{ NULL,       NULL,      "float-term", 0,           1,           -1 }, 
+	/* class                  instance     title       tags mask     isfloating   monitor */
+	{ "Gimp",                   NULL,       NULL,         0,            1,           -1 },
+	{ "Firefox",                NULL,       NULL,         1 << 8,       0,           -1 },
+	{ "Nautilus",               NULL,       NULL,         0,            1,           -1 },
+	{ NULL,                     NULL,     "brightness",   0,            1,           -1 },
+	{ NULL,                     NULL,     "float-term",   0,            1,           -1 },
+        { NULL,                     NULL,     "alsamixer",    0,            1,           -1 },
+        { "File-roller",            NULL,       NULL,         0,            1,           -1 },
 };
 
 /* layout(s) */
@@ -67,9 +69,11 @@ static const char *roficmd[] = {"rofi", "-modi", "drun,run", "-show", "drun", "-
 static const char *termcmd[]  = { "st", NULL };
 static const char *floattermcmd[] = { "st", "-t", "float-term", NULL };
 static const char *browsercmd[] = { "firefox", NULL };
-static const char *upvol[]   = { "amixer", "set", "Master", "5%+",     NULL };
-static const char *downvol[] = { "amixer", "set", "Master", "5%-",     NULL };
-static const char *mutevol[] = { "amixer", "set", "Master", "toggle",  NULL };
+static const char *upvol[]   = { "amixer", "set", "Master", "2%+",     NULL };
+static const char *downvol[] = { "amixer", "set", "Master", "2%-",     NULL };
+static const char *mutevol[] = { "st", "-e", "alsamixer",  NULL };
+static const char *adjbrightness[] = { "adj-brightness", NULL };
+static const char *rangercmd[] = { "st", "-e", "ranger", NULL };
 
 /* Add to keys[] array. With 0 as modifier, you are able to use the keys directly. */
 static Key keys[] = {
@@ -77,8 +81,9 @@ static Key keys[] = {
 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
         { SUPER,                        XK_p,      spawn,          {.v = roficmd } },
 	{ SUPER,                        XK_Return, spawn,          {.v = termcmd } },
-	{ SUPER,                       XK_grave,  spawn,          {.v = floattermcmd } },
+	{ SUPER,                        XK_grave,  spawn,          {.v = floattermcmd } },
 	{ SUPER,                        XK_w,      spawn,          {.v = browsercmd } },
+        { SUPER,                        XK_d,      spawn,          {.v = rangercmd } },
 	{ SUPER,                        XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
@@ -100,6 +105,10 @@ static Key keys[] = {
 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
+        { SUPER,                        XK_Left,   viewtoleft,     {0} },
+        { SUPER,                        XK_Right,  viewtoright,    {0} },
+        { SUPER|ShiftMask,             XK_Left,   tagtoleft,      {0} },
+        { SUPER|ShiftMask,             XK_Right,  tagtoright,     {0} },
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
@@ -114,6 +123,8 @@ static Key keys[] = {
 	{ 0,              XF86XK_AudioLowerVolume, spawn,          {.v = downvol } },
 	{ 0,              XF86XK_AudioMute,        spawn,          {.v = mutevol } },
 	{ 0,              XF86XK_AudioRaiseVolume, spawn,          {.v = upvol   } },
+        { 0,              XF86XK_MonBrightnessUp,     spawn,       {.v = adjbrightness} },
+        { 0,              XF86XK_MonBrightnessDown,   spawn,       {.v = adjbrightness} },
 };
 
 /* button definitions */
